@@ -1,20 +1,28 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Form from './components/Form'
 import List from './components/List'
 import Search from './components/Search'
 import './App.css';
+import axios from 'axios';
 
 const App = () => {
-  const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas',
-      phone: '0401111111' },
-      { name: 'Martti Hellas',
-      phone: '040123423111' }
-
-  ])
+  const [ persons, setPersons] = useState([])
   let [filterPersons, setFilterPersons] = useState(persons);
   const [ newName, setNewName ] = useState('')
   const [ newPhone, setNewPhone ] = useState('')
+
+  const personHook = () => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled', response.data)
+        setPersons(response.data)
+        setFilterPersons(response.data)
+      })
+  }
+  useEffect(personHook, [])
+  
 
   const handleNameChange = (event) =>{
     setNewName(event.target.value)
@@ -31,7 +39,7 @@ const App = () => {
     event.preventDefault()
     const personObj = {
       name: newName,
-      phone: newPhone,
+      number: newPhone,
     }
     if(persons.find(i => i.name === personObj.name)){
       alert(newName+' is already added to phonebook')
@@ -42,10 +50,10 @@ const App = () => {
     setNewPhone('')
   }
 
-  // In my very personal opinion this looks cleaner than the alternative.
-  // If there is an even cleaner way please PR and comment it.
-  const handleChange = {name:handleNameChange, phone:handlePhoneChange}
-  const newVariables = {name: newName, phone:newPhone,}
+  
+
+  const handleChange = {name:handleNameChange, number:handlePhoneChange}
+  const newVariables = {name: newName, number:newPhone,}
 
   return (
     <div>

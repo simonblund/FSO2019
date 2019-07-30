@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 const List = ({persons})=> {
     const rows = () => persons.map(person =>
@@ -17,7 +17,7 @@ const List = ({persons})=> {
 const Person = ({person},{key}) =>{
 
     return(
-        <li>{person.name} - {person.phone}</li>
+        <li>{person.name} - {person.number}</li>
     )
 }
 
