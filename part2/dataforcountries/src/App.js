@@ -4,6 +4,7 @@ import './App.css';
 import axios from 'axios';
 import List from './components/List'
 import Search from './components/Search'
+import Info from './components/Info'
 
 
 
@@ -27,8 +28,13 @@ const App = () => {
   }
   useEffect(allCountriesHook, [])
   let content = <p>Search for a country</p>
-  if(filtercountries.length < 11){
+  if(filtercountries.length===1){
+    content = <Info country={filtercountries[0]} />
+  }
+  else if(1<filtercountries.length < 11){
     content = <List countries={filtercountries} />
+  } else {
+    content = <p>Too many results, specify more!</p>
   }
   return (
     <div className="App">
