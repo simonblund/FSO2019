@@ -1,14 +1,14 @@
 import React from 'react';
 
-const Country = ({country}) => {
+const Country = ({country, onclick}) => {
     return(
-        <li>{country.name}</li>
+        <li>{country.name} - <button onClick={onclick} value={country.name}>More info</button></li>
     )
 }
-const List = ({ countries }) => {
+const List = ({ countries, onclick }) => {
 
     const rows = () => countries.map(country =>
-        <Country country={country} key={country.alpha2Code}/>
+        <Country country={country} key={country.alpha2Code} onclick={onclick}/>
     )
     return (
         <div>

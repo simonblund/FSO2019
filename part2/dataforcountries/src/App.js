@@ -27,12 +27,14 @@ const App = () => {
     SetFilterCountries(countries.filter(country => country.name.toLowerCase().indexOf(event.target.value.toLowerCase())!==-1))
   }
   useEffect(allCountriesHook, [])
+
+  
   let content = <p>Search for a country</p>
   if(filtercountries.length===1){
     content = <Info country={filtercountries[0]} />
   }
-  else if(1<filtercountries.length < 11){
-    content = <List countries={filtercountries} />
+  else if(filtercountries.length < 11){
+    content = <List countries={filtercountries} onclick={handleSearch} />
   } else {
     content = <p>Too many results, specify more!</p>
   }
