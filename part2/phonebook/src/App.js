@@ -3,23 +3,23 @@ import Form from './components/Form'
 import List from './components/List'
 import Search from './components/Search'
 import './App.css';
-import axios from 'axios';
+import contactService from './services/contactService'
 
 const App = () => {
   const [ persons, setPersons] = useState([])
-  let [filterPersons, setFilterPersons] = useState(persons);
+  const [filterPersons, setFilterPersons] = useState(persons);
   const [ newName, setNewName ] = useState('')
   const [ newPhone, setNewPhone ] = useState('')
 
+  
   const personHook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled', response.data)
-        setPersons(response.data)
-        setFilterPersons(response.data)
-      })
+    contactService
+    .getAll()
+    .then(response => {
+      setPersons(response)
+      setFilterPersons(response)
+    })
+    
   }
   useEffect(personHook, [])
   
@@ -42,16 +42,33 @@ const App = () => {
       number: newPhone,
     }
     if(persons.find(i => i.name === personObj.name)){
-      alert(newName+' is already added to phonebook')
+      const changeConf = window.confirm(newName+' is already added to phonebook, would you like to change the number?')
+      if(changeConf) {
+        const changee = persons.find(i => i.name === personObj.name )
+        contactService.update(changee.id, personObj)
+      }
     } else{
-        setPersons(persons.concat(personObj))
+        contactService.create(personObj)
+        contactService
+          .getAll()
+          .then(response => {
+            setPersons(response)
+            setFilterPersons(response)
+          })
+        
     }
     setNewName('')
     setNewPhone('')
   }
 
+  let list = () => {
+    if(filterPersons !== null){
+      return <List persons={filterPersons} />
+    } else {
+      return <p>No persons in list</p>
+    }
+  }
   
-
   const handleChange = {name:handleNameChange, number:handlePhoneChange}
   const newVariables = {name: newName, number:newPhone,}
 
@@ -64,7 +81,7 @@ const App = () => {
       <h2>Add new</h2>
       <Form handleChange = {handleChange} action = {addPerson} newVariables ={newVariables}/>
       <h2>List</h2>
-      <List persons={filterPersons} />
+      {list()}
     </div>
   )
 }
