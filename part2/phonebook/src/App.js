@@ -99,7 +99,7 @@ const App = () => {
           setErrorMessage(
             {
               type: 'error',
-              message: 'Creation of ' + personObj.name + ' failed'
+              message: 'Creation of ' + personObj.name + ' failed with the error: '+error.response.data.error
             }
 
           )
